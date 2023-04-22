@@ -29,6 +29,8 @@ public class Tetris2048 {
 
       Tetromino currentTetromino = createTetromino();
       Tetromino nextTetromino = createTetromino();
+
+      grid.drawNextTetromino(nextTetromino);
       grid.setCurrentTetromino(currentTetromino);
 
       // display a simple menu before opening the game
@@ -82,6 +84,8 @@ public class Tetris2048 {
 
             currentTetromino = nextTetromino;
             nextTetromino = createTetromino();
+
+            grid.drawNextTetromino(nextTetromino);
             grid.setCurrentTetromino(currentTetromino);
          }
 

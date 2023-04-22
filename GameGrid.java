@@ -63,6 +63,9 @@ public class GameGrid {
       // Draw the score in the top-left corner of the canvas
       StdDraw.textLeft(0.05, 0.95, "Score: " + score);
    }
+   public void drawNextTetromino( Tetromino t){
+
+   }
 
    // A method for drawing the cells and the lines of the game grid
    public void drawGrid() {
@@ -83,6 +86,7 @@ public class GameGrid {
       for (double y = startY + 1; y < endY; y++) // horizontal inner lines
          StdDraw.line(startX, y, endX, y);
       StdDraw.setPenRadius(); // reset the pen radius to its default value
+
       drawScore();
    }
 
@@ -219,6 +223,19 @@ public class GameGrid {
 
    // checking if the game is over due to having tiles above the topmost grid row.
    // The method returns true when the game is over and false otherwise.
+   public boolean check2048(){
+      int rowN = tileMatrix.length;
+      int colN = tileMatrix[0].length;
+      for(int i=0; i<rowN; i++){
+         for( int j=0; j<colN; j++){
+            if (tileMatrix[i][j] != null) {
+               if( tileMatrix[i][j].getNumber() == 2048) return true;
+            }
+         }
+      }
+
+      return false;
+   }
    public boolean updateGrid(Tile[][] tilesToLock, Point blcPosition) {
       // necessary for the display method to stop displaying the tetromino
 
@@ -240,6 +257,9 @@ public class GameGrid {
                   gameOver = true;
             }
          }
+      }
+      if ( check2048()) {
+         gameOver = true;
       }
       // return the value of the gameOver flag
       return gameOver;
