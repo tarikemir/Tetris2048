@@ -25,6 +25,9 @@ public class Tetromino {
    public char getType(){
       return type;
    }
+   public Tile[][] getTileMatrix(){
+      return tileMatrix;
+   }
    public Tetromino(char type) {
       // set the type (shape) of the tetromino as the given type
       this.type = type;

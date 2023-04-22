@@ -29,6 +29,9 @@ public class Tile {
       foregroundColor = new Color(255, 255, 255);
       boxColor = new Color(0, 100, 200);
    }
+   public Color getColor(){
+      return backgroundColor;
+   }
    public int getNumber(){
       return number;
    }

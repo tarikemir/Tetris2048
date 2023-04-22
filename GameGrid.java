@@ -63,9 +63,15 @@ public class GameGrid {
       // Draw the score in the top-left corner of the canvas
       StdDraw.textLeft(0.05, 0.95, "Score: " + score);
    }
-   public void drawNextTetromino( Tetromino t){
-
+   public void drawNextTetromino(Tetromino t) {
+      StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
+      StdDraw.setPenColor(StdDraw.WHITE);
+      // Draw the text for the next Tetromino in the top-left corner of the canvas
+      StdDraw.textRight(0.05, 0.95, "Next Tetromino: " + t.getType());
    }
+
+
+
 
    // A method for drawing the cells and the lines of the game grid
    public void drawGrid() {

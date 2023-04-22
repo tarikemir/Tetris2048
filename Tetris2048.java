@@ -32,7 +32,7 @@ public class Tetris2048 {
 
       grid.drawNextTetromino(nextTetromino);
       grid.setCurrentTetromino(currentTetromino);
-
+      System.out.println("Next tetromino: " + nextTetromino.getType());
       // display a simple menu before opening the game
       // by using the displayGameMenu method defined below
       displayGameMenu(gridH, gridW);
@@ -44,7 +44,7 @@ public class Tetris2048 {
          // check user interactions via the keyboard
          // --------------------------------------------------------------------
          // if the left arrow key is being pressed
-         System.out.println(nextTetromino.getType());
+
          if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT))
             // move the active tetromino left by one
             currentTetromino.move("left", grid);
@@ -70,6 +70,7 @@ public class Tetris2048 {
          grid.clearLine();
          // place the active tetromino on the grid when it cannot go down anymore
          if (!success) {
+            System.out.println("Next tetromino: " + nextTetromino.getType());
             // get the tile matrix of the tetromino without empty rows and columns
             currentTetromino.createMinBoundedTileMatrix();
             Tile[][] tiles = currentTetromino.getMinBoundedTileMatrix();
