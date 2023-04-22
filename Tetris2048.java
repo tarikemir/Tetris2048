@@ -26,7 +26,9 @@ public class Tetris2048 {
       GameGrid grid = new GameGrid(gridH, gridW);
       // create the first tetromino to enter the game grid
       // by using the createTetromino method defined below
+
       Tetromino currentTetromino = createTetromino();
+      Tetromino nextTetromino = createTetromino();
       grid.setCurrentTetromino(currentTetromino);
 
       // display a simple menu before opening the game
@@ -40,6 +42,7 @@ public class Tetris2048 {
          // check user interactions via the keyboard
          // --------------------------------------------------------------------
          // if the left arrow key is being pressed
+         System.out.println(nextTetromino.getType());
          if (StdDraw.isKeyPressed(KeyEvent.VK_LEFT))
             // move the active tetromino left by one
             currentTetromino.move("left", grid);
@@ -51,6 +54,9 @@ public class Tetris2048 {
          else if (StdDraw.isKeyPressed(KeyEvent.VK_DOWN))
             // move the active tetromino down by one
             currentTetromino.move("down", grid);
+         else if (StdDraw.isKeyPressed(KeyEvent.VK_UP))
+            // move the active tetromino down by one
+            currentTetromino.rotate();
 
          // move the active tetromino down by 1 once in 10 iterations (auto fall)
          boolean success = true;
@@ -58,6 +64,8 @@ public class Tetris2048 {
             success = currentTetromino.move("down", grid);
          iterationCount++;
 
+         grid.mergeTiles();
+         grid.clearLine();
          // place the active tetromino on the grid when it cannot go down anymore
          if (!success) {
             // get the tile matrix of the tetromino without empty rows and columns
@@ -71,7 +79,9 @@ public class Tetris2048 {
                break;
             // create the next tetromino to enter the game grid
             // by using the createTetromino function defined below
-            currentTetromino = createTetromino();
+
+            currentTetromino = nextTetromino;
+            nextTetromino = createTetromino();
             grid.setCurrentTetromino(currentTetromino);
          }
 
@@ -87,7 +97,7 @@ public class Tetris2048 {
    // A method for creating a random shaped tetromino to enter the game grid
    public static Tetromino createTetromino() {
       // the type (shape) of the tetromino is determined randomly
-      char[] tetrominoTypes = { 'I', 'O', 'Z' };
+      char[] tetrominoTypes = { 'I', 'O', 'Z' , 'S', 'T', 'J', 'L'};
       Random random = new Random();
       int randomIndex = random.nextInt(tetrominoTypes.length);
       char randomType = tetrominoTypes[randomIndex];

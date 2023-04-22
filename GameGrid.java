@@ -1,8 +1,11 @@
-import java.awt.Color; // the color type used in StdDraw
+
+import java.awt.*;
+import java.util.Arrays;
 
 // A class used for modelling the game grid
 public class GameGrid {
    // data fields
+   public int score=0;
    private int gridHeight, gridWidth; // the size of the game grid
    private Tile[][] tileMatrix; // to store the tiles locked on the game grid
    // the tetromino that is currently being moved on the game grid
@@ -53,6 +56,13 @@ public class GameGrid {
       StdDraw.show();
       StdDraw.pause(50);
    }
+   public void drawScore() {
+      // Set the font and color for the score display
+      StdDraw.setFont(new Font("Arial", Font.BOLD, 20));
+      StdDraw.setPenColor(StdDraw.WHITE);
+      // Draw the score in the top-left corner of the canvas
+      StdDraw.textLeft(0.05, 0.95, "Score: " + score);
+   }
 
    // A method for drawing the cells and the lines of the game grid
    public void drawGrid() {
@@ -73,6 +83,7 @@ public class GameGrid {
       for (double y = startY + 1; y < endY; y++) // horizontal inner lines
          StdDraw.line(startX, y, endX, y);
       StdDraw.setPenRadius(); // reset the pen radius to its default value
+      drawScore();
    }
 
    // A method for drawing the boundaries around the game grid
@@ -108,12 +119,102 @@ public class GameGrid {
          return false;
       return true;
    }
+   public void clearLine(){
 
+      int numRows = tileMatrix.length;
+      int numCols = tileMatrix[0].length;
+      int numFullLines = 0;
+      for (int i = 0; i < numRows; i++) {
+         boolean fullLine = true;
+         for (int j = 0; j < numCols; j++) {
+            if (tileMatrix[i][j] == null) {
+               fullLine = false;
+               break;
+            }
+         }
+         if (fullLine) {
+            numFullLines++;
+            // Move all rows above the current row down by 1
+            for (int k = i + 1; k < numRows; k++) {
+               for (int j = 0; j < numCols; j++) {
+
+                  if( tileMatrix[k - 1][j] != null ) score += tileMatrix[k - 1][j].getNumber();
+                  tileMatrix[k - 1][j] = tileMatrix[k][j];
+                  tileMatrix[k][j] = null;
+               }
+            }
+            // Clear the top row
+            Arrays.fill(tileMatrix[numRows-1], null);
+            // Since we moved everything down, we need to re-check this row
+            i--;
+         }
+      }
+   }
    // A method that locks the tiles of the landed tetromino on the game grid while
+   public void deleteUnconnectedTiles() {
+      boolean[][] connectedTiles = new boolean[tileMatrix.length][tileMatrix[0].length];
+      // Start from bottom row and mark connected tiles recursively
+      for (int col = 0; col < tileMatrix[0].length; col++) {
+         markConnectedTiles(tileMatrix.length - 1, col, connectedTiles, tileMatrix);
+      }
+      // Check each tile for connection
+      for (int row = 0; row < tileMatrix.length; row++) {
+         for (int col = 0; col < tileMatrix[0].length; col++) {
+            if (tileMatrix[row][col] != null && !connectedTiles[row][col]) {
+               // Delete unconnected tile
+               tileMatrix[row][col] = null;
+            }
+         }
+      }
+   }
+
+   private void markConnectedTiles(int row, int col, boolean[][] connectedTiles, Tile[][] tileMatrix) {
+      // Check if tile is out of bounds or already marked
+      if (row < 0 || row >= tileMatrix.length || col < 0 || col >= tileMatrix[0].length
+              || connectedTiles[row][col] || tileMatrix[row][col] == null) {
+         return;
+      }
+      // Mark tile as connected and check adjacent tiles recursively
+      connectedTiles[row][col] = true;
+      markConnectedTiles(row-1, col, connectedTiles, tileMatrix);
+      markConnectedTiles(row, col-1, connectedTiles, tileMatrix);
+      markConnectedTiles(row, col+1, connectedTiles, tileMatrix);
+   }
+
+   public void mergeTiles() {
+      for (int row = 0; row < tileMatrix.length; row++) {
+         for (int col = 0; col < tileMatrix[0].length; col++) {
+            Tile currentTile = tileMatrix[row][col];
+            if (currentTile != null) {
+               // Check if there is a same-numbered tile above or below
+               if (row > 0) {
+                  Tile aboveTile = tileMatrix[row-1][col];
+                  if (aboveTile != null && currentTile.getNumber() == aboveTile.getNumber()) {
+                     currentTile.setNumber(currentTile.getNumber() * 2);
+                     tileMatrix[row-1][col] = null;
+                  }
+               }
+               if (row < tileMatrix.length - 1) {
+                  Tile belowTile = tileMatrix[row+1][col];
+                  if (belowTile != null && currentTile.getNumber() == belowTile.getNumber()) {
+                     currentTile.setNumber(currentTile.getNumber() * 2);
+                     tileMatrix[row+1][col] = null;
+                  }
+               }
+            }
+         }
+      }
+      deleteUnconnectedTiles();
+
+   }
+
+
+
    // checking if the game is over due to having tiles above the topmost grid row.
    // The method returns true when the game is over and false otherwise.
    public boolean updateGrid(Tile[][] tilesToLock, Point blcPosition) {
       // necessary for the display method to stop displaying the tetromino
+
       currentTetromino = null;
       // lock the tiles of the current tetromino (tilesToLock) on the game grid
       int nRows = tilesToLock.length, nCols = tilesToLock[0].length;

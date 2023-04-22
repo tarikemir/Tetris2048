@@ -22,6 +22,9 @@ public class Tetromino {
    // Methods
    // --------------------------------------------------------------------------
    // A constructor for creating a tetromino with a given type (shape)
+   public char getType(){
+      return type;
+   }
    public Tetromino(char type) {
       // set the type (shape) of the tetromino as the given type
       this.type = type;
@@ -42,14 +45,49 @@ public class Tetromino {
          occupiedTiles[1] = new Point(1, 0);
          occupiedTiles[2] = new Point(0, 1);
          occupiedTiles[3] = new Point(1, 1);
-      } else { // type == 'Z'
+      } else if (type == 'Z') { // type == 'Z'
          n = 3; // n = number of rows = number of columns in the tile matrix
          // shape of the tetromino Z in its initial orientation
          occupiedTiles[0] = new Point(0, 1); // (column_index, row_index)
-         occupiedTiles[1] = new Point(1, 1);
-         occupiedTiles[2] = new Point(1, 2);
-         occupiedTiles[3] = new Point(2, 2);
+         occupiedTiles[1] = new Point(1, 1);///
+         occupiedTiles[2] = new Point(1, 2);///
+         occupiedTiles[3] = new Point(2, 2);///
       }
+      else if (type == 'S') { // type == 'S'
+         n = 3; // n = number of rows = number of columns in the tile matrix
+         // shape of the tetromino Z in its initial orientation
+         occupiedTiles[0] = new Point(0, 2); // (column_index, row_index)
+         occupiedTiles[1] = new Point(1, 2);
+         occupiedTiles[2] = new Point(1, 1);
+         occupiedTiles[3] = new Point(2, 1);
+      }
+      else if (type == 'T') { // type == 'S'
+         n = 3; // n = number of rows = number of columns in the tile matrix
+         // shape of the tetromino Z in its initial orientation
+         occupiedTiles[0] = new Point(0, 0); // (column_index, row_index)
+         occupiedTiles[1] = new Point(0, 1);
+         occupiedTiles[2] = new Point(0, 2);
+         occupiedTiles[3] = new Point(1, 1);
+      }
+      else if (type == 'L') { // type == 'S'
+         n = 3; // n = number of rows = number of columns in the tile matrix
+         // shape of the tetromino Z in its initial orientation
+         occupiedTiles[0] = new Point(0, 0); // (column_index, row_index)
+         occupiedTiles[1] = new Point(0, 1);
+         occupiedTiles[2] = new Point(0, 2);
+         occupiedTiles[3] = new Point(1, 0);
+      }
+      else{ // type == 'S'
+         n = 3; // n = number of rows = number of columns in the tile matrix
+         // shape of the tetromino Z in its initial orientation
+         occupiedTiles[0] = new Point(0, 0); // (column_index, row_index)
+         occupiedTiles[1] = new Point(0, 1);
+         occupiedTiles[2] = new Point(0, 2);
+         occupiedTiles[3] = new Point(1, 2);
+      }
+
+
+
       // create a matrix of numbered tiles based on the shape of the tetromino
       tileMatrix = new Tile[n][n];
       // create the four tiles (minos) of the tetromino and place these tiles
@@ -222,4 +260,42 @@ public class Tetromino {
       }
       return true; // the tetromino can be moved in the given direction
    }
+
+   public void rotate(){
+      int n;
+      if( type == 'O') n = 2;
+      else if ( type == 'I') n = 4;
+      else if ( type == 'Z') n = 3;
+      else if ( type == 'S') n = 3;
+      else if ( type == 'L') n = 3;
+      else if ( type == 'J') n = 3;
+      else n = 3;
+
+      //determines the transpose of the matrix
+      for(int i=0;i<n;i++)
+      {
+         for(int j=i;j<n;j++)
+         {
+            Tile temp = tileMatrix[i][j];
+            tileMatrix[i][j] = tileMatrix[j][i];
+            tileMatrix[j][i] = temp;
+         }
+      }
+
+      //then we reverse the elements of each row
+      for(int i=0;i<n;i++)
+      {
+         //logic to reverse each row i.e 1D Array.
+         int low = 0, high = n-1;
+         while(low < high)
+         {
+            Tile temp = tileMatrix[i][low];
+            tileMatrix[i][low] = tileMatrix[i][high];
+            tileMatrix[i][high] = temp;
+            low++;
+            high--;
+         }
+      }
+   }
 }
+

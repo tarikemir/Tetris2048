@@ -28,7 +28,12 @@ public class Tile {
       foregroundColor = new Color(0, 100, 200);
       boxColor = new Color(0, 100, 200);
    }
-
+   public int getNumber(){
+      return number;
+   }
+   public void setNumber( int newNumber){
+      number = newNumber;
+   }
    // a method for drawing the tile
    public void draw(Point position, double... sideLength) {
       // the default value for the side length (sLength) is 1
