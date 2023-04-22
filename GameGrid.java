@@ -151,35 +151,47 @@ public class GameGrid {
       }
    }
    // A method that locks the tiles of the landed tetromino on the game grid while
-   public void deleteUnconnectedTiles() {
-      boolean[][] connectedTiles = new boolean[tileMatrix.length][tileMatrix[0].length];
-      // Start from bottom row and mark connected tiles recursively
-      for (int col = 0; col < tileMatrix[0].length; col++) {
-         markConnectedTiles(tileMatrix.length - 1, col, connectedTiles, tileMatrix);
-      }
-      // Check each tile for connection
-      for (int row = 0; row < tileMatrix.length; row++) {
-         for (int col = 0; col < tileMatrix[0].length; col++) {
-            if (tileMatrix[row][col] != null && !connectedTiles[row][col]) {
-               // Delete unconnected tile
-               tileMatrix[row][col] = null;
+
+
+   public void moveUnconnectedTilesDown() {
+      int numRows = tileMatrix.length;
+      int numCols = tileMatrix[0].length;
+
+      for (int i = 0; i < numRows; i++) {
+         for (int j = 0; j < numCols; j++) {
+
+            if (tileMatrix[i][j] == null) continue;
+            boolean connected = isThereConnection(i, j, numRows, numCols);
+            if (connected) continue;
+
+            while (!connected && i > 0) {
+               tileMatrix[i - 1][j] = tileMatrix[i][j];
+               tileMatrix[i][j] = null;
+               i--;
+               connected = isThereConnection(i, j, numRows, numCols);
             }
+            if (connected) break;
          }
       }
    }
 
-   private void markConnectedTiles(int row, int col, boolean[][] connectedTiles, Tile[][] tileMatrix) {
-      // Check if tile is out of bounds or already marked
-      if (row < 0 || row >= tileMatrix.length || col < 0 || col >= tileMatrix[0].length
-              || connectedTiles[row][col] || tileMatrix[row][col] == null) {
-         return;
+   public boolean isThereConnection(int i, int j, int numRows, int numCols) {
+      if (i > 0) {
+         if (tileMatrix[i - 1][j] != null) return true;
       }
-      // Mark tile as connected and check adjacent tiles recursively
-      connectedTiles[row][col] = true;
-      markConnectedTiles(row-1, col, connectedTiles, tileMatrix);
-      markConnectedTiles(row, col-1, connectedTiles, tileMatrix);
-      markConnectedTiles(row, col+1, connectedTiles, tileMatrix);
+      if (j > 0) {
+         if (tileMatrix[i][j - 1] != null) return true;
+      }
+      if (j < numCols - 1) {
+         if (tileMatrix[i][j + 1] != null) return true;
+      }
+      if (i == 0) {
+         return true;
+      }
+      return false;
    }
+
+
 
    public void mergeTiles() {
       for (int row = 0; row < tileMatrix.length; row++) {
@@ -187,24 +199,19 @@ public class GameGrid {
             Tile currentTile = tileMatrix[row][col];
             if (currentTile != null) {
                // Check if there is a same-numbered tile above or below
-               if (row > 0) {
-                  Tile aboveTile = tileMatrix[row-1][col];
-                  if (aboveTile != null && currentTile.getNumber() == aboveTile.getNumber()) {
-                     currentTile.setNumber(currentTile.getNumber() * 2);
-                     tileMatrix[row-1][col] = null;
-                  }
-               }
+
                if (row < tileMatrix.length - 1) {
                   Tile belowTile = tileMatrix[row+1][col];
                   if (belowTile != null && currentTile.getNumber() == belowTile.getNumber()) {
                      currentTile.setNumber(currentTile.getNumber() * 2);
                      tileMatrix[row+1][col] = null;
+                     score += belowTile.getNumber()*2;
                   }
                }
             }
          }
       }
-      deleteUnconnectedTiles();
+      moveUnconnectedTilesDown();
 
    }
 

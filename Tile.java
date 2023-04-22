@@ -24,8 +24,9 @@ public class Tile {
       // set the number on the tile
       number = 2;
       // set the colors of the tile
-      backgroundColor = new Color(151, 178, 199);
-      foregroundColor = new Color(0, 100, 200);
+
+      backgroundColor = new Color(0, 100, 100);
+      foregroundColor = new Color(255, 255, 255);
       boxColor = new Color(0, 100, 200);
    }
    public int getNumber(){
@@ -33,6 +34,7 @@ public class Tile {
    }
    public void setNumber( int newNumber){
       number = newNumber;
+      backgroundColor = new Color(backgroundColor.getRed()+20, backgroundColor.getGreen()+10, backgroundColor.getBlue()+10);
    }
    // a method for drawing the tile
    public void draw(Point position, double... sideLength) {
