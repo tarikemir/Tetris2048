@@ -41,11 +41,11 @@ public class GameGrid {
    }
 
    // A method used for displaying the game grid
-   public void display() {
+   public void display(char t) {
       // clear the background to emptyCellColor
       StdDraw.clear(emptyCellColor);
       // draw the game grid
-      drawGrid();
+      drawGrid(t);
       // draw the current/active tetromino if it is not null (the case when the
       // game grid is updated)
       if (currentTetromino != null)
@@ -61,20 +61,19 @@ public class GameGrid {
       StdDraw.setFont(new Font("Arial", Font.BOLD, 20));
       StdDraw.setPenColor(StdDraw.WHITE);
       // Draw the score in the top-left corner of the canvas
-      StdDraw.textLeft(0.05, 0.95, "Score: " + score);
+      StdDraw.textLeft(0.05, -1.5, "Score: " + score);
    }
-   public void drawNextTetromino(Tetromino t) {
-      StdDraw.setFont(new Font("Arial", Font.BOLD, 30));
+   public void drawNextTetromino(char t) {
+      StdDraw.setFont(new Font("Arial", Font.BOLD, 20));
       StdDraw.setPenColor(StdDraw.WHITE);
-      // Draw the text for the next Tetromino in the top-left corner of the canvas
-      StdDraw.textRight(0.05, 0.95, "Next Tetromino: " + t.getType());
+      StdDraw.textLeft(5.05, -1.5, "Next Piece: ");
+      String Img = "images/"+ t + ".png";
+      StdDraw.picture(8.25,-1.5, Img);
    }
-
-
 
 
    // A method for drawing the cells and the lines of the game grid
-   public void drawGrid() {
+   public void drawGrid(char t) {
       // for each cell of the game grid
       for (int row = 0; row < gridHeight; row++)
          for (int col = 0; col < gridWidth; col++)
@@ -94,6 +93,7 @@ public class GameGrid {
       StdDraw.setPenRadius(); // reset the pen radius to its default value
 
       drawScore();
+      drawNextTetromino(t);
    }
 
    // A method for drawing the boundaries around the game grid

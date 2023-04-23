@@ -13,7 +13,7 @@ public class Tetris2048 {
       StdDraw.setCanvasSize(canvasW, canvasH);
       // set the scale of the coordinate system
       StdDraw.setXscale(-0.5, gridW - 0.5);
-      StdDraw.setYscale(-0.5, gridH - 0.5);
+      StdDraw.setYscale(-2.5, gridH - 0.5);
       // double buffering enables computer animations, creating an illusion of
       // motion by repeating four steps: clear, draw, show and pause
       StdDraw.enableDoubleBuffering();
@@ -30,7 +30,6 @@ public class Tetris2048 {
       Tetromino currentTetromino = createTetromino();
       Tetromino nextTetromino = createTetromino();
 
-      grid.drawNextTetromino(nextTetromino);
       grid.setCurrentTetromino(currentTetromino);
       System.out.println("Next tetromino: " + nextTetromino.getType());
       // display a simple menu before opening the game
@@ -86,12 +85,11 @@ public class Tetris2048 {
             currentTetromino = nextTetromino;
             nextTetromino = createTetromino();
 
-            grid.drawNextTetromino(nextTetromino);
             grid.setCurrentTetromino(currentTetromino);
          }
 
          // display the game grid and the current tetromino
-         grid.display();
+         grid.display(nextTetromino.getType());
 
       }
 
